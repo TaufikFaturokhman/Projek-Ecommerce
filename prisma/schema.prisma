@@ -9,3 +9,175 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Product {
+  id              Int              @id
+  name            String
+  description     String?
+  condition       String?
+  weight          Float
+  price           Float
+  discountPrice   Float
+  taxPrice        Float
+  stockQuantity   Int
+  category_id     Int
+  category        Category         @relation(fields: [category_id], references: [id])
+  productVariants ProductVariant[]
+  images          ProductImage[]
+  carts           Cart[]
+  orderItems      OrderItem[]
+}
+
+model Category {
+  id       Int       @id
+  name     String
+  isActive Boolean
+  products Product[]
+
+  @@unique([name])
+}
+
+model ProductVariant {
+  id            Int                   @id
+  name          String
+  product_id    Int
+  product       Product               @relation(fields: [product_id], references: [id])
+  variantValues ProductVariantValue[]
+  OrderItem     OrderItem[]
+}
+
+model ProductVariantValue {
+  id                 Int            @id
+  value              String
+  price              Float
+  stockQuantity      Int
+  product_variant_id Int
+  productVariant     ProductVariant @relation(fields: [product_variant_id], references: [id])
+  OrderItem          OrderItem[]
+}
+
+model ProductImage {
+  id         Int     @id
+  path       String
+  product_id Int
+  product    Product @relation(fields: [product_id], references: [id])
+
+  @@unique([product_id, path])
+}
+
+model Cart {
+  id         Int     @id
+  product_id Int
+  user_id    Int
+  quantity   Int
+  product    Product @relation(fields: [product_id], references: [id])
+  user       User    @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, product_id])
+}
+
+model Order {
+  id                     Int         @id
+  firstname              String
+  lastname               String
+  email                  String      
+  paymentMethod          String
+  shippingTrackingNumber String
+  shippingFee            Float
+  shippingMethod         String
+  totalTax               Float
+  total                  Float
+  grandTotal             Float
+  user_id                Int
+  status                 String
+  user                   User        @relation(fields: [user_id], references: [id])
+  orderItems             OrderItem[]
+  @@unique([email])
+}
+
+model OrderItem {
+  id                       Int                 @id
+  price                    Float
+  quantity                 Int
+  product_id               Int
+  product_variant_id       Int
+  product_variant_value_id Int
+  order_id                 Int
+  product                  Product             @relation(fields: [product_id], references: [id])
+  productVariant           ProductVariant      @relation(fields: [product_variant_id], references: [id])
+  productVariantValue      ProductVariantValue @relation(fields: [product_variant_value_id], references: [id])
+  order                    Order               @relation(fields: [order_id], references: [id])
+
+  @@unique([product_id, product_variant_id, product_variant_value_id, order_id])
+}
+
+model Permission {
+  id      Int    @id
+  module  String
+  access  Json
+  role_id Int
+  role    Role   @relation(fields: [role_id], references: [id])
+}
+
+model Role {
+  id          Int          @id
+  name        String
+  users       User[]
+  permissions Permission[]
+
+  @@unique([name])
+}
+
+model Setting {
+  id    Int    @id
+  name  String
+  value String
+  type  String
+
+  @@unique([name])
+}
+
+model ShippingMethod {
+  id       Int     @id
+  name     String
+  isActive Boolean
+
+  @@unique([name])
+}
+
+model UserAddress {
+  id              Int    @id
+  name            String
+  country         String
+  address         String
+  province        String
+  province_id     Int
+  city            String
+  city_id         Int
+  district        String
+  district_id     Int
+  subDistrict     String
+  sub_district_id Int
+  postalCode      String
+  user_id         Int
+  user            User   @relation(fields: [user_id], references: [id])
+}
+
+model User {
+  id                Int           @id
+  firstname         String
+  lastname          String
+  email             String 
+  password          String
+  phone             String
+  gender            String
+  dateOfBirth       DateTime
+  resetToken        String?
+  verificationToken String?
+  role_id           Int
+  role              Role          @relation(fields: [role_id], references: [id])
+  addresses         UserAddress[]
+  carts             Cart[]
+  orders            Order[]
+  @@unique([email])
+}
