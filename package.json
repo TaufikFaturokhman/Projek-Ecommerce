@@ -4,6 +4,7 @@
   "description": "Latihan Project E-Commerce",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/TaufikFaturokhman/Projek-Ecommerce#readme",
   "dependencies": {
+    "@prisma/client": "^5.5.2",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
