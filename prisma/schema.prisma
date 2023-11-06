@@ -80,7 +80,7 @@ model Order {
   id                     Int         @id
   firstname              String
   lastname               String
-  email                  String      
+  email                  String
   paymentMethod          String
   shippingTrackingNumber String
   shippingFee            Float
@@ -92,6 +92,7 @@ model Order {
   status                 String
   user                   User        @relation(fields: [user_id], references: [id])
   orderItems             OrderItem[]
+
   @@unique([email])
 }
 
@@ -167,7 +168,7 @@ model User {
   id                Int           @id
   firstname         String
   lastname          String
-  email             String 
+  email             String
   password          String
   phone             String
   gender            String
@@ -179,5 +180,6 @@ model User {
   addresses         UserAddress[]
   carts             Cart[]
   orders            Order[]
+
   @@unique([email])
 }
