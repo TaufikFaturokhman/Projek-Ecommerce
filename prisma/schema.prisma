@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Product {
-  id              Int              @id
+  id              Int              @id @default(autoincrement())
   name            String
   description     String?
   condition       String?
@@ -38,7 +38,7 @@ model Category {
 }
 
 model ProductVariant {
-  id            Int                   @id
+  id            Int                   @id @default(autoincrement())
   name          String
   product_id    Int
   product       Product               @relation(fields: [product_id], references: [id])
@@ -47,7 +47,7 @@ model ProductVariant {
 }
 
 model ProductVariantValue {
-  id                 Int            @id
+  id                 Int            @id @default(autoincrement())
   value              String
   price              Float
   stockQuantity      Int
@@ -57,7 +57,7 @@ model ProductVariantValue {
 }
 
 model ProductImage {
-  id         Int     @id
+  id         Int     @id @default(autoincrement())
   path       String
   product_id Int
   product    Product @relation(fields: [product_id], references: [id])
@@ -66,7 +66,7 @@ model ProductImage {
 }
 
 model Cart {
-  id         Int     @id
+  id         Int     @id @default(autoincrement())
   product_id Int
   user_id    Int
   quantity   Int
@@ -77,7 +77,7 @@ model Cart {
 }
 
 model Order {
-  id                     Int         @id
+  id                     Int         @id @default(autoincrement())
   firstname              String
   lastname               String
   email                  String
@@ -97,7 +97,7 @@ model Order {
 }
 
 model OrderItem {
-  id                       Int                 @id
+  id                       Int                 @id @default(autoincrement())
   price                    Float
   quantity                 Int
   product_id               Int
@@ -113,7 +113,7 @@ model OrderItem {
 }
 
 model Permission {
-  id      Int    @id
+  id      Int    @id @default(autoincrement())
   module  String
   access  Json
   role_id Int
@@ -121,7 +121,7 @@ model Permission {
 }
 
 model Role {
-  id          Int          @id
+  id          Int          @id @default(autoincrement())
   name        String
   users       User[]
   permissions Permission[]
@@ -130,7 +130,7 @@ model Role {
 }
 
 model Setting {
-  id    Int    @id
+  id    Int    @id @default(autoincrement())
   name  String
   value String
   type  String
@@ -139,7 +139,7 @@ model Setting {
 }
 
 model ShippingMethod {
-  id       Int     @id
+  id       Int     @id @default(autoincrement())
   name     String
   isActive Boolean
 
@@ -147,7 +147,7 @@ model ShippingMethod {
 }
 
 model UserAddress {
-  id              Int    @id
+  id              Int    @id @default(autoincrement())
   name            String
   country         String
   address         String
@@ -165,7 +165,7 @@ model UserAddress {
 }
 
 model User {
-  id                Int           @id
+  id                Int           @id @default(autoincrement())
   firstname         String
   lastname          String
   email             String
