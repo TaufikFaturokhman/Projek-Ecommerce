@@ -1,17 +1,30 @@
-const express = require('express'),
-    router = express.Router(),
-    controller = require('../controllers/product.controller')
+const express = require('express');
+    const router = express.Router();
+    const multer = require ('multer')();
+    const controller = require('../controllers/product.controller');
 
-router.post('/addProduct', controller.addProduct)
-router.get('/getProduct', controller.getProduct)
-router.get('/getProductById/:id', controller.getProductId)
-router.put('/updateProduct', controller.updateProduct)
-router.delete('/deleteProduct', controller.deleteProduct)
+router.post('/addProduct', controller.addProduct);
+router.get('/getProduct', controller.getProduct);
+router.get('/getProductId/:id', controller.getProductId);
+router.put('/updateProduct/:id', controller.updateProduct);
+router.delete('/deleteProduct/:id', controller.deleteProduct);
 
-router .post('/addVariant',controller.addVariant)
-router.get('/getVariant', controller.getVariant)
-router.get('/getVariantById/:id', controller.getVariantById)
-router.put('/updateVariant', controller.updateVariant)
-router.delete('/deleteVariant', controller.deleteVariant)
+router.post('/addVariant', controller.addVariant);
+router.get('/getVariant', controller.getVariant);
+router.get('/getVariantById/:id', controller.getVariantById);
+router.put('/updateVariant/:id', controller.updateVariant);
+router.delete('/deleteVariant/:id', controller.deleteVariant);
 
-module.exports = router
+router.post('/addProductVariantValue', controller.addProductVariantValue);
+router.get('/getProductVariantValues', controller.getProductVariantValues);
+router.get('/getProductVariantValueById/:id', controller.getProductVariantValueById);
+router.put('/updateProductVariantValue/:id', controller.updateProductVariantValue);
+router.delete('/deleteProductVariantValue/:id', controller.deleteProductVariantValue);
+
+router.post('/uploadImages', controller.uploadImages);
+router.get('/getImages', controller.getImages);
+router.get('/getImagesId/:id', controller.getImagesId);
+router.put('/updateImages/:id', controller.updateImages);
+router.delete('/deleteImages/:id', controller.deleteImages);
+
+module.exports = router;
