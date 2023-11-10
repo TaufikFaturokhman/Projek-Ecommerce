@@ -1,4 +1,5 @@
 const { carts } = require('../models')
+const prisma = require('../libs/prisma')
 
 module.exports = {
     addToCart: async (req, res) => {
