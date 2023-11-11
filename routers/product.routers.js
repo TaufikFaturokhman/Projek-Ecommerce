@@ -21,10 +21,13 @@ router.get('/getProductVariantValueById/:id', controller.getProductVariantValueB
 router.put('/updateProductVariantValue/:id', controller.updateProductVariantValue);
 router.delete('/deleteProductVariantValue/:id', controller.deleteProductVariantValue);
 
-router.post('/uploadImages', controller.uploadImages);
+router.post('/uploadImages',multer.single('image') ,controller.uploadImages);
 router.get('/getImages', controller.getImages);
 router.get('/getImagesId/:id', controller.getImagesId);
 router.put('/updateImages/:id', controller.updateImages);
 router.delete('/deleteImages/:id', controller.deleteImages);
+
+router.post('/addCategories', controller.addCategories)
+router.get('/getCategories', controller.getCategories)
 
 module.exports = router;
