@@ -1,5 +1,6 @@
-const { product_image, product_variants, product_variant_values, products } = require('../models');
+const { product_image, product_variants, product_variant_values, products,categories } = require('../models');
 const prisma = require('../libs/prisma');
+const imageKit = require('../libs/imageKit')
 
 module.exports = {
     addProduct: async (req, res) => {
@@ -146,7 +147,7 @@ module.exports = {
     },
     getVariant: async (req, res) => {
         try {
-            const data = product_variants.findMany({})
+            const data = await product_variants.findMany({})
             if (data) {
                 return res.status(200).json({
                     success: true,
@@ -332,11 +333,19 @@ module.exports = {
     },
     uploadImages: async (req, res) => {
         try {
+            const convertToString = req.file.buffer.toString('base64')
+            
+            const uploadFile = await imageKit.upload({
+                fileName: req.file.originalname,
+                file: convertToString
+            })
+            
             const process = await product_image.create({
                 data: {
-                    path: req.body.path,
+                    path: uploadFile.url.toString(),
                     product_id: parseInt(req.body.product_id)
                 }
+            
             });
             if (process) {
                 return res.status(200).json({
@@ -423,6 +432,47 @@ module.exports = {
             console.error(`Error deleting product image: ${err}`);
             return res.status(500).json({
                 error: 'An error occurred while deleting the product image'
+            });
+        }
+    },
+    addCategories: async (req,res) =>{
+        try{
+            const process = await categories.create({
+                data:{
+                    name:req.body.name,
+                    isActive:true
+                }
+            })
+            if(process){
+                return res.status(200).json({
+                    success: 'Category successfully added'
+                })
+            }
+            return res.status(500).json({
+                succes:false
+            })
+        }
+        catch (err){
+            console.error(`Error adding categories: ${err}`);
+            return res.status(500).json({
+                error: 'An error occurred while adding the categories'
+            });
+        }
+    },
+    getCategories : async (req,res) =>{
+        try{
+            const data = await prisma.category.findMany({})
+            if(data){
+                return res.status(200).json(data)
+            }
+            return res.status(500).json({
+                success:false
+            })
+        }
+        catch (err) {
+            console.error(`Error getting categories: ${err}`);
+            return res.status(500).json({
+                error: 'An error occurred while getting the categories'
             });
         }
     }

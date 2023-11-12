@@ -1,33 +1,13 @@
-const multer = require('multer');
-const path = require('path');
+const imageKit = require('imagekit')
 
-function generateFilter(props){
-    let {allowedMimeTypes} = props;
-    return multer({
-        fileFilter: (req, file, callback) =>{
-            if(!allowedMimeTypes.includes(file.mimetype)){
-                const err = new Error(`Only ${allowedMimeTypes.join(', ')} allowed to upload!`);
-                return callback (err, false);
-            }
-            callback(null, true);
-        },
-        onError: (err, next)=>{
-            next(err);
-        }
-    });
-}
+const {
+    IMAGEKIT_PUBLIC_KEY,
+    IMAGEKIT_SECRET_KEY,
+    IMAGEKIT_URL_ENDPOINT 
+} = process.env
 
-
-module.exports = {
-    image: generateFilter({
-        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg']
-    }),
-
-    video: generateFilter({
-        allowedMimeTypes: ['video/x-msvideo', 'video/mp4', 'video/mpeg']
-    }),
-
-    document: generateFilter({
-        allowedMimeTypes: ['application/pdf']
-    })
-};
+module.exports = new imageKit({
+    publicKey: IMAGEKIT_PUBLIC_KEY,
+    privateKey: IMAGEKIT_SECRET_KEY,
+    urlEndpoint: IMAGEKIT_URL_ENDPOINT
+})
