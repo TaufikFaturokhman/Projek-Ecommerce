@@ -9,31 +9,6 @@ const prisma = require("../libs/prisma");
 const imageKit = require("../libs/imageKit");
 
 module.exports = {
-  // addProduct : async(req,res)=>{
-  //     try{
-  //         const {name,description,condition,weight,price,discountPrice,taxPrice,stockQuantity,category_id} = req.body
-
-  //         const process = await prisma.product.create({
-  //             data:{
-  //                 name:name,
-  //                 description:description,
-  //                 condition:condition,
-  //                 discountPrice:parseFloat(discountPrice),
-  //                 price:parseFloat(price),
-  //                 stockQuantity:parseInt(stockQuantity),
-  //                 taxPrice:parseFloat(taxPrice),
-  //                 weight:parseFloat(weight),
-  //                 category_id:parseInt(category_id)
-  //             }
-  //         })
-  //         if(process){
-  //             return res.status(200).json({success:"data was addes successfully"})
-  //         }
-  //     }
-  //     catch (err){
-
-  //     }
-  // }
   addProduct: async (req, res) => {
     try {
       const {
@@ -220,4 +195,39 @@ module.exports = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+  deleteData : async(req,res)=>{
+    try {
+      const productId = parseInt(req.params.id);
+  
+      // Delete product along with its variants and variant values
+      await prisma.productVariantValue.deleteMany({
+        where: {
+          productVariant: {
+            product: { id: productId },
+          },
+        },
+      });
+  
+      await prisma.productVariant.deleteMany({
+       where:{
+        product : { id: productId }
+       }
+      });
+      
+      await prisma.productImage.deleteMany({
+        where: {
+          product: { id: productId },
+        },
+      });
+
+      await prisma.product.delete({
+        where: { id: productId },
+      });
+  
+      res.status(200).json({success:"data was successfully deleted"}); // 204 No Content
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 };

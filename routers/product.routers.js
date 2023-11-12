@@ -8,6 +8,7 @@ router.post('/addProduct1',multer.single('image')  , controller2.addProduct);
 router.get('/getProduct1', controller2.getProduct);
 router.get('/getProductById1/:id', controller2.getDataById);
 router.put('/editProduct1/:id', controller2.editProduct);
+router.delete('/deleteProduct1/:id', controller2.deleteData)
 
 
 //single handle to make data product,product_variant,product_variant_values,product_images
