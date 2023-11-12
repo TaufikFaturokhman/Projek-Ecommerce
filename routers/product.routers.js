@@ -2,7 +2,15 @@ const express = require('express');
     const router = express.Router();
     const multer = require ('multer')();
     const controller = require('../controllers/product.controller');
+    const controller2 = require('../controllers/product.controller.AIO')
+//one endpoint but one handle to make data product,product_variant,product_variant_values,product_images
+router.post('/addProduct1',multer.single('image')  , controller2.addProduct);
+router.get('/getProduct1', controller2.getProduct);
+router.get('/getProductById1/:id', controller2.getDataById);
+router.put('/editProduct1/:id', controller2.editProduct);
 
+
+//single handle to make data product,product_variant,product_variant_values,product_images
 router.post('/addProduct', controller.addProduct);
 router.get('/getProduct', controller.getProduct);
 router.get('/getProductId/:id', controller.getProductId);
