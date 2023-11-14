@@ -1,0 +1,22 @@
+// {
+//     "firstname": "Rizky",
+//     "lastname": "Mahatir",
+//     "email": "rizkymahatir69@gmail.com",
+//     "password": "rizkyganteng123",
+//     "phone": "082314419892",
+//     "gender": "Pria",
+//     "dateOfBirth": "1990-05-15T12:30:00Z",
+//     "role_id": 1,
+//     "name": "Rizky",
+//     "country": "Indonesia",
+//     "address": "Jl. Mangga 3 No. 77",
+//     "province": "Jawa Timur",
+//     "province_id": 5,
+//     "city": "Jember"
+//     "city_id": 2,
+//     "district": "sumbersari"
+//     "district_id": 1,
+//     "subDistrict": "sumbersari",
+//     "sub_district_id": 2,
+//     "postalCode": "68121"
+// }

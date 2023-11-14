@@ -180,6 +180,6 @@ model User {
   addresses         UserAddress[]
   carts             Cart[]
   orders            Order[]
-
+  
   @@unique([email])
 }
