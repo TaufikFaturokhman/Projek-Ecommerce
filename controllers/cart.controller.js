@@ -5,69 +5,77 @@ module.exports = {
     addToCart: async (req, res) => {
         try {
             const { userId, productId, quantity } = req.body;
-            
-            const products = await prisma.products.findUnique({
-                where: { id: productId }
-            })
 
-            if(!products) {
-                return res.status(404).json({
-                    error: 'Product not found.' 
-                })
-            }
+            const existingCartItem = await prisma.cart.findFirst({
+                where: {
+                    user_id: userId,
+                    product_id: productId,
+                },
+            });            
 
-            const existingCartProduct = await prisma.cart.findUnique({
-                where: { userId, productId }
-                })
-                
-                if (existingCartProduct) {
+            if (existingCartItem) {
                 await prisma.cart.update({
-                    where: { id: existingCartProduct.id },
-                    data: { quantity: existingCartProduct.quantity + quantity }
-                })
-                } else {
-                    await prisma.cart.create({
-                        data: {
-                        userId,
-                        productId,
-                        quantity
-                        }
-                    })
-                }
-
-                return res.status(200).json({ 
-                    success: 'Product added to cart successfully.' 
-                })
-
+                    where: {
+                        id: existingCartItem.id,
+                    },
+                    data: {
+                        quantity: existingCartItem.quantity + quantity,
+                    },
+                });
+            } else {
+                await prisma.cart.create({
+                    data: {
+                        user_id: userId,
+                        product_id: productId,
+                        quantity,
+                    },
+                });
+            }
+    
+            return res.status(200).json({
+                success: 'Product added to cart successfully.',
+            });
         } catch (error) {
-            console.error('Error adding product to cart:', error)
-
+            console.error('Error adding product to cart:', error);
+    
             return res.status(500).json({
-                error: 'An error occurred while adding the product to the cart.'
-            })
+                error: 'An error occurred while adding the product to the cart.',
+            });
         }
     },
 
-    getUserCart: async (userId) => {
+    getUserCart: async (req, res) => {
         try {
-            const userId = req.params.userId;
-
-            const cartItems = await prisma.cart.findMany({
-                where: { userId },
-                include: {
-                product: true,
-                }
+            const carts = await prisma.cart.findMany();
+            res.json(carts);
+        } catch (error) {
+            console.error('Error getting user cart:', error);
+            return res.status(500).json({ 
+                error: 'An error occurred while getting your cart.' 
             })
+        }
+      },
 
-            return res.status(200).json(cartItems)
-
-            } catch (error) {
-                console.error('Error getting user cart:', error);
-                return res.status(500).json({ 
-                    error: 'An error occurred while getting your cart.' 
-                })
-            }
-        },
+    
+    getUserCartById: async (req, res) => {
+        try {
+        const userId = req.params.userId; 
+        const userCart = await prisma.cart.findMany({
+            where: {
+            user_id: parseInt(userId), 
+            },
+            include: {
+                user: true,     
+                product: true,   
+            },
+        });
+    
+        res.json(userCart);
+        } catch (error) {
+        console.error('Error getting user cart:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 
     removeFromCart: async (userId, cartId) => {
         try {

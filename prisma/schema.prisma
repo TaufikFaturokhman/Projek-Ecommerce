@@ -72,8 +72,6 @@ model Cart {
   quantity   Int
   product    Product @relation(fields: [product_id], references: [id])
   user       User    @relation(fields: [user_id], references: [id])
-
-  @@unique([user_id, product_id])
 }
 
 model Order {
